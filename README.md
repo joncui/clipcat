@@ -157,6 +157,7 @@ The following finders are supported by `clipcat-menu`:
 - [fzf](https://github.com/junegunn/fzf)
 - [rofi](https://github.com/davatorium/rofi)
 - [dmenu](https://tools.suckless.org/dmenu/)
+- [fuzzel](https://codeberg.org/dnkl/fuzzel)
 
 ## Configuration
 
@@ -472,7 +473,7 @@ bindsym $mod+o exec $launcher-clipboard-remove
 
 ```
 
-**NOTE**: You can use `rofi` or `dmenu` as the default finder.
+**NOTE**: You can use `rofi`, `dmenu` or `fuzzel` as the default finder.
 
 </details>
 
@@ -496,7 +497,7 @@ Add the following keybindings to your `leftwm` configuration file (`$XDG_CONFIG_
 )
 ```
 
-**NOTE**: You can use `rofi` or `dmenu` as the default finder.
+**NOTE**: You can use `rofi`, `dmenu` or `fuzzel` as the default finder.
 
 Add the following commands to your `$XDG_CONFIG_HOME/leftwm/themes/current/up`:
 
