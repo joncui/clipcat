@@ -3,8 +3,8 @@ use std::sync::{Arc, RwLock};
 use clipcat_base::ClipboardContent;
 
 use crate::{
-    pubsub::{self, Publisher, Subscriber},
     ClipboardKind, ClipboardLoad, ClipboardStore, ClipboardSubscribe, Error,
+    pubsub::{self, Publisher, Subscriber},
 };
 
 #[derive(Clone, Debug)]

@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use crate::{
     config,
-    finder::{external::ExternalProgram, FinderStream, SelectionMode},
+    finder::{FinderStream, SelectionMode, external::ExternalProgram},
 };
 
 #[derive(Clone, Debug, Eq, PartialEq)]

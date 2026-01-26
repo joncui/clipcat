@@ -4,7 +4,7 @@ use clipcat_proto as proto;
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status};
 
-use crate::{notification, ClipboardManager};
+use crate::{ClipboardManager, notification};
 
 pub struct ManagerService<Notification> {
     manager: Arc<Mutex<ClipboardManager<Notification>>>,

@@ -6,7 +6,7 @@ use clipcat_dbus_variant as dbus_variant;
 use tokio::sync::Mutex;
 use zbus::interface;
 
-use crate::{metrics, notification, ClipboardManager};
+use crate::{ClipboardManager, metrics, notification};
 
 pub struct ManagerService<Notification> {
     manager: Arc<Mutex<ClipboardManager<Notification>>>,

@@ -2,8 +2,8 @@ mod error;
 
 use std::{
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     thread,
     time::Duration,
@@ -11,13 +11,13 @@ use std::{
 
 use clipcat_base::ClipFilter;
 use wl_clipboard_rs::paste::{
-    get_mime_types as wl_clipboard_get_mime_types, Error as WaylandError, Seat,
+    Error as WaylandError, Seat, get_mime_types as wl_clipboard_get_mime_types,
 };
 
 pub use self::error::Error;
 use crate::{
-    pubsub::{self, Subscriber},
     ClipboardKind, ClipboardSubscribe,
+    pubsub::{self, Subscriber},
 };
 
 const POLLING_INTERVAL: Duration = Duration::from_millis(500);

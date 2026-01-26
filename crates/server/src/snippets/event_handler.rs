@@ -4,7 +4,7 @@ use std::{
 };
 
 use clipcat_base::ClipEntry;
-use notify::{event, Event, EventKind};
+use notify::{Event, EventKind, event};
 use tokio::sync::mpsc;
 
 pub enum SnippetWatcherEvent {

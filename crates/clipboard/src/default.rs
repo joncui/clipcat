@@ -1,7 +1,7 @@
 use std::{
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     thread,
 };
@@ -32,8 +32,8 @@ use crate::listener::MacOsListener;
 ))]
 use crate::listener::{WaylandListener, X11Listener};
 use crate::{
-    traits::EventObserver, ClipboardKind, ClipboardLoad, ClipboardStore, ClipboardSubscribe, Error,
-    Subscriber,
+    ClipboardKind, ClipboardLoad, ClipboardStore, ClipboardSubscribe, Error, Subscriber,
+    traits::EventObserver,
 };
 
 // SAFETY: We need the `clipboard_` prefix.

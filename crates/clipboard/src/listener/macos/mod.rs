@@ -2,8 +2,8 @@ mod error;
 
 use std::{
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     thread,
     time::Duration,
@@ -14,8 +14,8 @@ use objc2_app_kit::NSPasteboard;
 
 pub use self::error::Error;
 use crate::{
-    pubsub::{self, Subscriber},
     ClipboardSubscribe,
+    pubsub::{self, Subscriber},
 };
 
 const POLLING_INTERVAL: Duration = Duration::from_millis(250);

@@ -1,7 +1,7 @@
 use clipcat_dbus_variant as dbus_variant;
 use zbus::interface;
 
-use crate::{metrics, notification, ClipboardWatcherToggle};
+use crate::{ClipboardWatcherToggle, metrics, notification};
 
 pub struct WatcherService<Notification> {
     watcher_toggle: ClipboardWatcherToggle<Notification>,
