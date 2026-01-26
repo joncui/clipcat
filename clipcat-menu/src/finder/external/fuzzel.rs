@@ -1,6 +1,6 @@
 use crate::{
     config,
-    finder::{external::ExternalProgram, finder_stream::INDEX_SEPARATOR, FinderStream},
+    finder::{FinderStream, external::ExternalProgram, finder_stream::INDEX_SEPARATOR},
 };
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -62,8 +62,8 @@ mod tests {
     use crate::{
         config,
         finder::{
-            external::{ExternalProgram, Fuzzel},
             SelectionMode,
+            external::{ExternalProgram, Fuzzel},
         },
     };
 
