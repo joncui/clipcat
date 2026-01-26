@@ -49,15 +49,14 @@ pub struct Subscriber {
 impl ClipboardWait for Subscriber {
     fn wait(&self) -> Result<(ClipboardKind, mime::Mime), Error> {
         let (lock, condvar) = &*self.inner;
-        let result = {
+        {
             let mut state = lock.lock();
             condvar.wait(&mut state);
             match *state {
                 (State::Running, Some(ref mime)) => Ok((self.kind, mime.clone())),
                 (State::Running | State::Stopped, _) => Err(Error::NotifierClosed),
             }
-        };
-        result
+        }
     }
 }
 

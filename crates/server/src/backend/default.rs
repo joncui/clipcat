@@ -6,7 +6,7 @@ use clipcat_clipboard::{Clipboard, ClipboardLoad, ClipboardStore, ClipboardSubsc
 use snafu::ResultExt;
 use tokio::task;
 
-use crate::backend::{error, traits, Error, Result, Subscriber};
+use crate::backend::{Error, Result, Subscriber, error, traits};
 
 #[derive(Clone)]
 pub struct Backend {

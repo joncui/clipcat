@@ -45,13 +45,13 @@ impl Filter {
         self.regex_set = regex_patterns;
     }
 
-    pub fn set_text_min_length(&mut self, size: usize) { self.filter_text_min_length = size; }
+    pub const fn set_text_min_length(&mut self, size: usize) { self.filter_text_min_length = size; }
 
-    pub fn set_text_max_length(&mut self, size: usize) { self.filter_text_max_length = size; }
+    pub const fn set_text_max_length(&mut self, size: usize) { self.filter_text_max_length = size; }
 
-    pub fn set_image_max_size(&mut self, size: usize) { self.filter_image_max_size = size; }
+    pub const fn set_image_max_size(&mut self, size: usize) { self.filter_image_max_size = size; }
 
-    pub fn deny_image(&mut self, deny_image: bool) { self.deny_image = deny_image; }
+    pub const fn deny_image(&mut self, deny_image: bool) { self.deny_image = deny_image; }
 
     pub fn filter_clipboard_content<C>(&self, content: C) -> bool
     where
@@ -97,11 +97,7 @@ impl Filter {
     where
         S: AsRef<str>,
     {
-        if self.regex_set.is_empty() {
-            false
-        } else {
-            self.regex_set.is_match(text.as_ref())
-        }
+        if self.regex_set.is_empty() { false } else { self.regex_set.is_match(text.as_ref()) }
     }
 
     #[inline]

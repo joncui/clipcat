@@ -30,7 +30,7 @@ use snafu::ResultExt;
 use snippets::SnippetWatcherEvent;
 use tokio::{
     net::UnixListener,
-    sync::{broadcast::error::RecvError, Mutex},
+    sync::{Mutex, broadcast::error::RecvError},
 };
 use tokio_stream::wrappers::UnixListenerStream;
 

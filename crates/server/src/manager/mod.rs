@@ -195,11 +195,7 @@ where
     }
 
     pub fn remove_snippet(&mut self, id: u64) -> bool {
-        if self.snippet_ids.remove(&id) {
-            self.clips.remove(&id).is_some()
-        } else {
-            false
-        }
+        if self.snippet_ids.remove(&id) { self.clips.remove(&id).is_some() } else { false }
     }
 
     #[inline]

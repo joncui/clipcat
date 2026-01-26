@@ -1,7 +1,7 @@
 use clipcat_proto as proto;
 use tonic::{Request, Response, Status};
 
-use crate::{notification, ClipboardWatcherToggle};
+use crate::{ClipboardWatcherToggle, notification};
 
 pub struct WatcherService<Notification> {
     watcher_toggle: ClipboardWatcherToggle<Notification>,

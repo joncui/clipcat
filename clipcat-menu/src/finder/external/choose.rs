@@ -3,7 +3,7 @@ use clipcat_base::ClipEntryMetadata;
 use crate::{
     config,
     finder::{
-        external::ExternalProgram, finder_stream::ENTRY_SEPARATOR, FinderStream, SelectionMode,
+        FinderStream, SelectionMode, external::ExternalProgram, finder_stream::ENTRY_SEPARATOR,
     },
 };
 
@@ -69,7 +69,7 @@ impl FinderStream for Choose {
 mod tests {
     use crate::{
         config,
-        finder::{external::ExternalProgram, Choose, SelectionMode},
+        finder::{Choose, SelectionMode, external::ExternalProgram},
     };
 
     #[test]

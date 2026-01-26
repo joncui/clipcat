@@ -2,13 +2,13 @@ use std::io::Cursor;
 
 use clipcat_base::ClipEntryMetadata;
 use skim::{
-    prelude::{SkimItemReader, SkimOptionsBuilder},
     Skim,
+    prelude::{SkimItemReader, SkimOptionsBuilder},
 };
 use snafu::ResultExt;
 
 use crate::finder::{
-    error, finder_stream::ENTRY_SEPARATOR, FinderError, FinderStream, SelectionMode,
+    FinderError, FinderStream, SelectionMode, error, finder_stream::ENTRY_SEPARATOR,
 };
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -29,8 +29,11 @@ impl BuiltinFinder {
                 SelectionMode::Single => false,
                 SelectionMode::Multiple => true,
             };
-            let options =
-                SkimOptionsBuilder::default().height(Some("100%")).multi(multi).build().unwrap();
+            let options = SkimOptionsBuilder::default()
+                .height("100%".to_string())
+                .multi(multi)
+                .build()
+                .unwrap();
 
             let item_reader = SkimItemReader::default();
             let items = item_reader.of_bufread(Cursor::new(input));

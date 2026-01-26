@@ -40,7 +40,7 @@ pkgs.mkShell {
 
       buf
       hclfmt
-      nixfmt-rfc-style
+      nixfmt
       nodePackages.prettier
       shfmt
       taplo

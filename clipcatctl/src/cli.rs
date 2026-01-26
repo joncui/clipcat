@@ -465,4 +465,4 @@ async fn print_list(client: &Client, preview_length: usize, no_id: bool) -> Resu
 }
 
 #[inline]
-fn parse_hex(src: &str) -> Result<u64, ParseIntError> { u64::from_str_radix(src, 16) }
+const fn parse_hex(src: &str) -> Result<u64, ParseIntError> { u64::from_str_radix(src, 16) }

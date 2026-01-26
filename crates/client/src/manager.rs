@@ -4,11 +4,11 @@ use clipcat_proto as proto;
 use tonic::Request;
 
 use crate::{
+    Client,
     error::{
         BatchRemoveClipError, ClearClipError, GetClipError, GetCurrentClipError, GetLengthError,
         InsertClipError, ListClipError, MarkClipError, RemoveClipError, UpdateClipError,
     },
-    Client,
 };
 
 #[async_trait]
@@ -16,7 +16,7 @@ pub trait Manager {
     async fn get(&self, id: u64) -> Result<ClipEntry, GetClipError>;
 
     async fn get_current_clip(&self, kind: ClipboardKind)
-        -> Result<ClipEntry, GetCurrentClipError>;
+    -> Result<ClipEntry, GetCurrentClipError>;
 
     async fn update(
         &self,

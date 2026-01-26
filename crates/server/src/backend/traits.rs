@@ -1,12 +1,12 @@
 use async_trait::async_trait;
 use clipcat_base::{ClipboardContent, ClipboardKind};
 
-use crate::backend::{error::Result, Subscriber};
+use crate::backend::{Subscriber, error::Result};
 
 #[async_trait]
 pub trait Backend: Sync + Send {
     async fn load(&self, kind: ClipboardKind, mime: Option<mime::Mime>)
-        -> Result<ClipboardContent>;
+    -> Result<ClipboardContent>;
 
     async fn store(&self, kind: ClipboardKind, data: ClipboardContent) -> Result<()>;
 

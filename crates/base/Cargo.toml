@@ -24,7 +24,6 @@ directories = { workspace = true }
 humansize   = { workspace = true }
 image       = { workspace = true }
 mime        = { workspace = true }
-once_cell   = { workspace = true }
 regex       = { workspace = true }
 semver      = { workspace = true }
 sha2        = { workspace = true }

@@ -9,13 +9,13 @@ use std::{
 use async_trait::async_trait;
 use clipcat_base::{ClipEntry, ClipboardKind};
 use snafu::ResultExt;
-use time::{format_description::well_known::Rfc3339, OffsetDateTime, UtcOffset};
+use time::{OffsetDateTime, UtcOffset, format_description::well_known::Rfc3339};
 use tokio::{
     fs::{File, OpenOptions},
     io::{AsyncSeekExt, AsyncWriteExt, SeekFrom},
 };
 
-use crate::history::{driver::Driver, error, Error};
+use crate::history::{Error, driver::Driver, error};
 
 const CURRENT_SCHEMA: u64 = model::v2::FileHeader::SCHEMA_VERSION;
 
@@ -53,7 +53,7 @@ impl FileSystemDriver {
 
                 let clips = match schema {
                     schema if schema > CURRENT_SCHEMA => {
-                        return Err(Error::NewerSchema { new: schema, current: CURRENT_SCHEMA })
+                        return Err(Error::NewerSchema { new: schema, current: CURRENT_SCHEMA });
                     }
                     model::v1::FileHeader::SCHEMA_VERSION => {
                         tracing::info!("Clip history schema `{schema}` is out-of-date");

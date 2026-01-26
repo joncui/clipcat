@@ -28,17 +28,17 @@ use std::str::FromStr;
 use time::OffsetDateTime;
 
 pub use self::proto::{
+    BatchRemoveRequest, BatchRemoveResponse, ClipEntry, ClipEntryMetadata, ClipboardKind,
+    GetCurrentClipRequest, GetCurrentClipResponse, GetRequest, GetResponse,
+    GetSystemVersionResponse, InsertRequest, InsertResponse, LengthResponse, ListRequest,
+    ListResponse, MarkRequest, MarkResponse, RemoveRequest, RemoveResponse, UpdateRequest,
+    UpdateResponse, WatcherState, WatcherStateReply,
     manager_client::ManagerClient,
     manager_server::{Manager, ManagerServer},
     system_client::SystemClient,
     system_server::{System, SystemServer},
     watcher_client::WatcherClient,
     watcher_server::{Watcher, WatcherServer},
-    BatchRemoveRequest, BatchRemoveResponse, ClipEntry, ClipEntryMetadata, ClipboardKind,
-    GetCurrentClipRequest, GetCurrentClipResponse, GetRequest, GetResponse,
-    GetSystemVersionResponse, InsertRequest, InsertResponse, LengthResponse, ListRequest,
-    ListResponse, MarkRequest, MarkResponse, RemoveRequest, RemoveResponse, UpdateRequest,
-    UpdateResponse, WatcherState, WatcherStateReply,
 };
 
 impl From<ClipboardKind> for clipcat_base::ClipboardKind {

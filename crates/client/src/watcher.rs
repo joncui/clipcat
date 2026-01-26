@@ -4,8 +4,8 @@ use clipcat_proto as proto;
 use tonic::Request;
 
 use crate::{
-    error::{DisableWatcherError, EnableWatcherError, GetWatcherStateError, ToggleWatcherError},
     Client,
+    error::{DisableWatcherError, EnableWatcherError, GetWatcherStateError, ToggleWatcherError},
 };
 
 #[async_trait]

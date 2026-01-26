@@ -16,6 +16,7 @@ keywords.workspace     = true
 prost       = { workspace = true }
 prost-types = { workspace = true }
 tonic       = { workspace = true }
+tonic-prost = { workspace = true }
 
 mime = { workspace = true }
 time = { workspace = true }
@@ -23,8 +24,8 @@ time = { workspace = true }
 clipcat-base = { workspace = true }
 
 [build-dependencies]
-tonic-build = { workspace = true }
-prost-build = { workspace = true }
+tonic-prost-build = { workspace = true }
+prost-build       = { workspace = true }
 
 [lints]
 workspace = true
