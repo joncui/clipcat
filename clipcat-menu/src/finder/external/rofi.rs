@@ -3,7 +3,7 @@ use clipcat_base::ClipEntryMetadata;
 use crate::{
     config,
     finder::{
-        external::ExternalProgram, finder_stream::ENTRY_SEPARATOR, FinderStream, SelectionMode,
+        FinderStream, SelectionMode, external::ExternalProgram, finder_stream::ENTRY_SEPARATOR,
     },
 };
 
@@ -74,7 +74,7 @@ impl FinderStream for Rofi {
 mod tests {
     use crate::{
         config,
-        finder::{external::ExternalProgram, Rofi, SelectionMode},
+        finder::{Rofi, SelectionMode, external::ExternalProgram},
     };
 
     #[test]

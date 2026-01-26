@@ -3,8 +3,8 @@ mod options;
 mod toggle;
 
 use std::sync::{
-    atomic::{AtomicBool, Ordering},
     Arc,
+    atomic::{AtomicBool, Ordering},
 };
 
 use clipcat_base::{ClipEntry, ClipFilter, ClipboardContent, ClipboardKind};
@@ -13,10 +13,10 @@ use snafu::OptionExt;
 use tokio::sync::broadcast;
 
 pub use self::{
+    Worker as ClipboardWatcherWorker,
     error::Error,
     options::{Error as ClipboardWatcherOptionsError, Options as ClipboardWatcherOptions},
     toggle::Toggle as ClipboardWatcherToggle,
-    Worker as ClipboardWatcherWorker,
 };
 use crate::{
     backend::{ClipboardBackend, Error as BackendError},

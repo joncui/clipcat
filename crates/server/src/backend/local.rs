@@ -4,7 +4,7 @@ use clipcat_clipboard::{ClipboardLoad, ClipboardStore, ClipboardSubscribe, Local
 use snafu::ResultExt;
 use tokio::task;
 
-use crate::backend::{error, traits, ClipboardKind, Error, Result, Subscriber};
+use crate::backend::{ClipboardKind, Error, Result, Subscriber, error, traits};
 
 #[derive(Clone, Debug, Default)]
 pub struct Backend(LocalClipboard);

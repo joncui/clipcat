@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use clipcat_proto as proto;
 use tonic::Request;
 
-use crate::{error::GetSystemVersionError, Client};
+use crate::{Client, error::GetSystemVersionError};
 
 #[async_trait]
 pub trait System {

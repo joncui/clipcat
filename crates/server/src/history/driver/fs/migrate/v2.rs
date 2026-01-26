@@ -9,8 +9,9 @@ use tokio::{
 };
 
 use crate::history::{
+    Error,
     driver::fs::{image_dir_path, image_file_path_from_digest, model},
-    error, Error,
+    error,
 };
 
 // SAFETY: Migrating requires many steps.

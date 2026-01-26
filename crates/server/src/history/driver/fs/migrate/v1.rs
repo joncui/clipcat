@@ -4,7 +4,7 @@ use clipcat_base::ClipEntry;
 use snafu::ResultExt;
 use tokio::fs::OpenOptions;
 
-use crate::history::{driver::fs::model, error, Error};
+use crate::history::{Error, driver::fs::model, error};
 
 pub async fn load<P>(clips_file_path: P) -> Result<Vec<ClipEntry>, Error>
 where

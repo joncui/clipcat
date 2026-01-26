@@ -2,13 +2,13 @@ use std::io::Cursor;
 
 use clipcat_base::ClipEntryMetadata;
 use skim::{
-    prelude::{SkimItemReader, SkimOptionsBuilder},
     Skim,
+    prelude::{SkimItemReader, SkimOptionsBuilder},
 };
 use snafu::ResultExt;
 
 use crate::finder::{
-    error, finder_stream::ENTRY_SEPARATOR, FinderError, FinderStream, SelectionMode,
+    FinderError, FinderStream, SelectionMode, error, finder_stream::ENTRY_SEPARATOR,
 };
 
 #[derive(Clone, Copy, Debug, Default)]

@@ -4,24 +4,24 @@ mod error;
 use std::{
     os::fd::AsRawFd,
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     thread,
     time::Duration,
 };
 
-use clipcat_base::{utils::RetryInterval, ClipFilter};
+use clipcat_base::{ClipFilter, utils::RetryInterval};
 use snafu::ResultExt;
 use x11rb::protocol::Event as X11Event;
 
 use self::context::Context;
 pub use self::error::Error;
 use crate::{
+    ClipboardKind, ClipboardSubscribe, ListenerKind,
     listener::x11::error::InitializeMioPollSnafu,
     pubsub::{self, Subscriber},
     traits::EventObserver,
-    ClipboardKind, ClipboardSubscribe, ListenerKind,
 };
 
 const CONTEXT_TOKEN: mio::Token = mio::Token(0);
