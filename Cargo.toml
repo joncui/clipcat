@@ -1,5 +1,5 @@
 [workspace.package]
-version      = "0.22.0"
+version      = "0.23.0"
 authors      = ["xrelkd <46590321+xrelkd@users.noreply.github.com>"]
 homepage     = "https://github.com/xrelkd/clipcat"
 repository   = "https://github.com/xrelkd/clipcat"
@@ -125,6 +125,7 @@ async_fn_in_trait = "allow"
 # TODO: deny `unused_crate_dependencies` after https://github.com/rust-lang/rust/issues/95513 being solved
 unused_crate_dependencies = "allow"
 
+unknown_lints     = "warn"
 unstable_features = "warn"
 
 absolute_paths_not_starting_with_crate  = "deny"
@@ -233,7 +234,6 @@ unconditional_recursion                 = "deny"
 unexpected_cfgs                         = "deny"
 ungated_async_fn_track_caller           = "deny"
 uninhabited_static                      = "deny"
-unknown_lints                           = "deny"
 unnameable_test_items                   = "deny"
 unreachable_code                        = "deny"
 unreachable_patterns                    = "deny"

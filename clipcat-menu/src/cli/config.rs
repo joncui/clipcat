@@ -57,6 +57,33 @@ pub struct DmenuConfig {
 }
 
 #[derive(Args)]
+pub struct FuzzelConfig {
+    #[clap(
+        name = "fuzzel-menu-length",
+        long = "fuzzel-menu-length",
+        env = "CLIPCAT_MENU_FUZZEL_LINE_LENGTH",
+        help = "Specify the length of a line showing on fuzzel"
+    )]
+    pub menu_length: Option<usize>,
+
+    #[clap(
+        name = "fuzzel-line-length",
+        long = "fuzzel-line-length",
+        env = "CLIPCAT_MENU_FUZZEL_LINE_LENGTH",
+        help = "Specify the length of a line showing on fuzzel"
+    )]
+    pub line_length: Option<usize>,
+
+    #[clap(
+        name = "fuzzel-extra-arguments",
+        long = "fuzzel-extra-arguments",
+        env = "CLIPCAT_MENU_FUZZEL_EXTRA_ARGUMENTS",
+        help = "Extra arguments pass to fuzzel, use ',' to separate arguments"
+    )]
+    pub extra_arguments: Option<String>,
+}
+
+#[derive(Args)]
 pub struct CustomFinderConfig {
     #[clap(
         name = "custom-finder-program-path",

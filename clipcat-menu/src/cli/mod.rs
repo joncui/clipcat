@@ -50,6 +50,9 @@ pub struct Cli {
     dmenu_config: config::DmenuConfig,
 
     #[command(flatten)]
+    fuzzel_config: config::FuzzelConfig,
+
+    #[command(flatten)]
     custom_finder_config: config::CustomFinderConfig,
 }
 
@@ -100,6 +103,7 @@ impl Default for Cli {
 }
 
 impl Cli {
+    #[allow(clippy::too_many_lines)]
     pub fn run(self) -> Result<(), Error> {
         let Self {
             commands,
@@ -108,6 +112,7 @@ impl Cli {
             finder,
             rofi_config,
             dmenu_config,
+            fuzzel_config,
             custom_finder_config,
         } = self;
 
@@ -148,8 +153,14 @@ impl Cli {
 
         config.log.registry();
 
-        let finder =
-            build_finder(finder, rofi_config, dmenu_config, custom_finder_config, &mut config);
+        let finder = build_finder(
+            finder,
+            rofi_config,
+            dmenu_config,
+            fuzzel_config,
+            custom_finder_config,
+            &mut config,
+        );
         let fut = async move {
             let client = {
                 let access_token = config.access_token();
@@ -258,6 +269,7 @@ fn build_finder(
     finder: Option<FinderType>,
     rofi_config: config::RofiConfig,
     dmenu_config: config::DmenuConfig,
+    fuzzel_config: config::FuzzelConfig,
     custom_finder_config: config::CustomFinderConfig,
     config: &mut Config,
 ) -> FinderRunner {
@@ -292,6 +304,21 @@ fn build_finder(
             }
 
             if let Some(args) = dmenu_config.extra_arguments {
+                finder.set_extra_arguments(
+                    &args.split(',').map(ToString::to_string).collect::<Vec<_>>(),
+                );
+            }
+        }
+        FinderType::Fuzzel => {
+            if let Some(line_length) = fuzzel_config.line_length {
+                finder.set_line_length(line_length);
+            }
+
+            if let Some(menu_length) = fuzzel_config.menu_length {
+                finder.set_menu_length(menu_length);
+            }
+
+            if let Some(args) = fuzzel_config.extra_arguments {
                 finder.set_extra_arguments(
                     &args.split(',').map(ToString::to_string).collect::<Vec<_>>(),
                 );
