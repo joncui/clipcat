@@ -28,6 +28,9 @@ pub struct Config {
     pub dmenu: Option<Dmenu>,
 
     #[serde(default)]
+    pub fuzzel: Option<Fuzzel>,
+
+    #[serde(default)]
     pub choose: Option<Choose>,
 
     #[serde(default)]
@@ -146,6 +149,7 @@ impl Default for Config {
             preview_length: 80,
             rofi: Some(Rofi::default()),
             dmenu: Some(Dmenu::default()),
+            fuzzel: Some(Fuzzel::default()),
             choose: Some(Choose::default()),
             custom_finder: Some(CustomFinder::default()),
             log: clipcat_cli::config::LogConfig::default(),
@@ -170,6 +174,21 @@ pub struct Rofi {
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Dmenu {
+    #[serde(default = "default_line_length")]
+    pub line_length: usize,
+
+    #[serde(default = "default_menu_length")]
+    pub menu_length: usize,
+
+    #[serde(default = "default_menu_prompt")]
+    pub menu_prompt: String,
+
+    #[serde(default)]
+    pub extra_arguments: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Fuzzel {
     #[serde(default = "default_line_length")]
     pub line_length: usize,
 
@@ -217,6 +236,17 @@ impl Default for Rofi {
 }
 
 impl Default for Dmenu {
+    fn default() -> Self {
+        Self {
+            menu_prompt: default_menu_prompt(),
+            menu_length: default_menu_length(),
+            line_length: default_line_length(),
+            extra_arguments: Vec::new(),
+        }
+    }
+}
+
+impl Default for Fuzzel {
     fn default() -> Self {
         Self {
             menu_prompt: default_menu_prompt(),

@@ -15,7 +15,7 @@ use self::{
     external::{Choose, Custom, Dmenu, ExternalProgram, Fzf, Rofi, Skim},
 };
 pub use self::{error::FinderError, finder_stream::FinderStream};
-use crate::config::Config;
+use crate::{config::Config, finder::external::Fuzzel};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum SelectionMode {
@@ -34,6 +34,9 @@ pub enum FinderType {
 
     #[serde(rename = "dmenu")]
     Dmenu,
+
+    #[serde(rename = "fuzzel")]
+    Fuzzel,
 
     #[serde(rename = "skim")]
     Skim,
@@ -78,6 +81,7 @@ impl FromStr for FinderType {
             "builtin" => Ok(Self::Builtin),
             "rofi" => Ok(Self::Rofi),
             "dmenu" => Ok(Self::Dmenu),
+            "fuzzel" => Ok(Self::Fuzzel),
             "choose" => Ok(Self::Choose),
             "skim" => Ok(Self::Skim),
             "fzf" => Ok(Self::Fzf),
@@ -93,6 +97,7 @@ impl fmt::Display for FinderType {
             Self::Builtin => "builtin",
             Self::Rofi => "rofi",
             Self::Dmenu => "dmenu",
+            Self::Fuzzel => "fuzzel",
             Self::Choose => "choose",
             Self::Skim => "skim",
             Self::Fzf => "fzf",
@@ -115,6 +120,9 @@ impl FinderRunner {
             FinderType::Rofi => Some(Box::new(Rofi::from(config.rofi.clone().unwrap_or_default()))),
             FinderType::Dmenu => {
                 Some(Box::new(Dmenu::from(config.dmenu.clone().unwrap_or_default())))
+            }
+            FinderType::Fuzzel => {
+                Some(Box::new(Fuzzel::from(config.fuzzel.clone().unwrap_or_default())))
             }
             FinderType::Choose => {
                 Some(Box::new(Choose::from(config.choose.clone().unwrap_or_default())))
