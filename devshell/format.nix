@@ -8,7 +8,7 @@ pkgs.runCommandNoCC "check-format"
       shellcheck
 
       buf
-      nixfmt-rfc-style
+      nixfmt
       nodePackages.prettier
       shfmt
       taplo
