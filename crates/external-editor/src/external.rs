@@ -70,24 +70,32 @@ impl ExternalEditor {
 
 #[cfg(test)]
 mod tests {
+    #![allow(unsafe_code)]
     use crate::ExternalEditor;
 
     #[test]
     fn test_from_env() {
         let external_editor = "my-editor";
 
-        std::env::set_var("EDITOR", external_editor);
+        unsafe {
+            std::env::set_var("EDITOR", external_editor);
+        }
+
         let editor = ExternalEditor::from_env().unwrap();
         assert_eq!(&editor.editor, external_editor);
 
-        std::env::remove_var("EDITOR");
+        unsafe {
+            std::env::remove_var("EDITOR");
+        }
         let editor = ExternalEditor::from_env();
         assert!(editor.is_err());
     }
 
     #[test]
     fn test_execute() {
-        std::env::set_var("TMPDIR", "/tmp");
+        unsafe {
+            std::env::set_var("TMPDIR", "/tmp");
+        }
 
         let runtime = tokio::runtime::Runtime::new().unwrap();
         let editor = ExternalEditor::new("echo");

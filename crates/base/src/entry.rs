@@ -7,7 +7,7 @@ use std::{
 use image::ImageEncoder as _;
 use sha2::{Digest, Sha256};
 use snafu::{ResultExt, Snafu};
-use time::{format_description::well_known::Rfc3339, OffsetDateTime, UtcOffset};
+use time::{OffsetDateTime, UtcOffset, format_description::well_known::Rfc3339};
 
 use crate::{ClipboardContent, ClipboardKind};
 
@@ -101,7 +101,7 @@ impl Entry {
     pub const fn timestamp(&self) -> OffsetDateTime { self.timestamp }
 
     #[inline]
-    pub fn set_timestamp(&mut self, timestamp: OffsetDateTime) { self.timestamp = timestamp; }
+    pub const fn set_timestamp(&mut self, timestamp: OffsetDateTime) { self.timestamp = timestamp; }
 
     #[inline]
     #[must_use]

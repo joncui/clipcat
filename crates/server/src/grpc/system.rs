@@ -1,9 +1,10 @@
+use std::sync::LazyLock;
+
 use clipcat_proto as proto;
-use once_cell::sync::Lazy;
 use tonic::{Request, Response, Status};
 
-static GET_SYSTEM_VERSION_RESPONSE: Lazy<proto::GetSystemVersionResponse> =
-    Lazy::new(|| proto::GetSystemVersionResponse {
+static GET_SYSTEM_VERSION_RESPONSE: LazyLock<proto::GetSystemVersionResponse> =
+    LazyLock::new(|| proto::GetSystemVersionResponse {
         major: clipcat_base::PROJECT_SEMVER.major,
         minor: clipcat_base::PROJECT_SEMVER.minor,
         patch: clipcat_base::PROJECT_SEMVER.patch,

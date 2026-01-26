@@ -11,11 +11,11 @@ use std::{
     hash::{Hash, Hasher},
     net::{IpAddr, Ipv4Addr},
     path::{Path, PathBuf},
+    sync::LazyLock,
 };
 
 use bytes::Bytes;
 use directories::ProjectDirs;
-use once_cell::sync::Lazy;
 
 pub use self::{
     entry::{Entry as ClipEntry, Error as ClipEntryError, Metadata as ClipEntryMetadata},
@@ -32,7 +32,7 @@ pub const DBUS_SYSTEM_OBJECT_PATH: &str = "/org/clipcat/clipcat/system";
 pub const DBUS_WATCHER_OBJECT_PATH: &str = "/org/clipcat/clipcat/watcher";
 pub const DBUS_MANAGER_OBJECT_PATH: &str = "/org/clipcat/clipcat/manager";
 
-pub static PROJECT_SEMVER: Lazy<semver::Version> = Lazy::new(|| {
+pub static PROJECT_SEMVER: LazyLock<semver::Version> = LazyLock::new(|| {
     semver::Version::parse(PROJECT_VERSION).unwrap_or(semver::Version {
         major: 0,
         minor: 0,
@@ -69,7 +69,7 @@ pub const DEFAULT_METRICS_HOST: IpAddr = IpAddr::V4(Ipv4Addr::LOCALHOST);
 
 pub const DEFAULT_MENU_PROMPT: &str = "Clipcat";
 
-pub static PROJECT_CONFIG_DIR: Lazy<PathBuf> = Lazy::new(|| {
+pub static PROJECT_CONFIG_DIR: LazyLock<PathBuf> = LazyLock::new(|| {
     ProjectDirs::from("", PROJECT_NAME, PROJECT_NAME)
         .expect("Creating `ProjectDirs` should always success")
         .config_dir()

@@ -1,15 +1,15 @@
-use std::{future::Future, net::SocketAddr, str::FromStr};
+use std::{future::Future, net::SocketAddr, str::FromStr, sync::LazyLock};
 
 use axum::{
+    Router,
     body::Body,
     extract::Extension,
-    http::{header, HeaderValue},
+    http::{HeaderValue, header},
     response::Response,
-    routing, Router,
+    routing,
 };
 use bytes::{BufMut, BytesMut};
 use mime::Mime;
-use once_cell::sync::Lazy;
 use prometheus::{Encoder, TextEncoder};
 use snafu::ResultExt;
 use tokio::net::TcpListener;
@@ -21,11 +21,11 @@ use crate::{
 
 // FIXME: use `OPENMETRICS_TEXT`
 #[allow(dead_code)]
-static OPENMETRICS_TEXT: Lazy<Mime> = Lazy::new(|| {
+static OPENMETRICS_TEXT: LazyLock<Mime> = LazyLock::new(|| {
     Mime::from_str("application/openmetrics-text; version=1.0.0; charset=utf-8")
         .expect("is valid mime type; qed")
 });
-static ENCODER: Lazy<TextEncoder> = Lazy::new(TextEncoder::new);
+static ENCODER: LazyLock<TextEncoder> = LazyLock::new(TextEncoder::new);
 
 async fn metrics<Metrics>(Extension(metrics): Extension<Metrics>) -> Response<Body>
 where
@@ -80,14 +80,14 @@ where
 
 #[cfg(test)]
 mod tests {
-    use once_cell::sync::Lazy;
+    use std::sync::LazyLock;
 
     use crate::server::{ENCODER, OPENMETRICS_TEXT};
 
     #[test]
-    fn test_once_cell_lazy() {
-        let _ = Lazy::force(&OPENMETRICS_TEXT);
-        let _ = Lazy::force(&ENCODER);
+    fn test_lazy_lock() {
+        let _ = LazyLock::force(&OPENMETRICS_TEXT);
+        let _ = LazyLock::force(&ENCODER);
     }
 
     #[test]
