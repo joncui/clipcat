@@ -21,7 +21,6 @@
     }:
     let
       cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-      name = "clipcat";
     in
     (flake-utils.lib.eachDefaultSystem (
       system:
@@ -82,12 +81,14 @@
         packages = rec {
           default = clipcat;
           clipcat = pkgs.callPackage ./devshell/package.nix {
+            inherit (cargoToml.workspace.package) name;
             inherit (cargoToml.workspace.package) version;
-            inherit name rustPlatform;
+            inherit rustPlatform;
           };
           container = pkgs.callPackage ./devshell/container.nix {
+            inherit (cargoToml.workspace.package) name;
             inherit (cargoToml.workspace.package) version;
-            inherit name clipcat;
+            inherit clipcat;
           };
         };
 
