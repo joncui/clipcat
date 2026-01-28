@@ -15,7 +15,7 @@ use self::cli::Cli;
 fn main() {
     if let Err(err) = Cli::default().run() {
         let error_msg = clipcat_cli::error_helpers::format_error_with_help(
-            &err,
+            err,
             "clipcat-menu",
             "clipcat-menu.toml",
         );
