@@ -1,5 +1,4 @@
 [workspace.package]
-name         = "clipcat"
 version      = "0.23.0"
 authors      = ["xrelkd <46590321+xrelkd@users.noreply.github.com>"]
 homepage     = "https://github.com/xrelkd/clipcat"
@@ -11,6 +10,9 @@ rust-version = "1.85"
 description  = "Clipboard manager written in Rust Programming Language."
 categories   = ["clipboard manager"]
 keywords     = ["clipboard"]
+
+[workspace.metadata.crane]
+name = "clipcat"
 
 [workspace]
 resolver = "2"
