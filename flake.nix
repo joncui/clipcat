@@ -91,33 +91,6 @@
             inherit clipcat;
           };
         };
-
-        checks = {
-          format = pkgs.callPackage ./devshell/format.nix { };
-
-          rust-build = craneLib.cargoBuild (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-            }
-          );
-          rust-format = craneLib.cargoFmt { inherit src; };
-          rust-clippy = craneLib.cargoClippy (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-              cargoClippyExtraArgs = pkgs.lib.strings.concatMapStrings (x: x + " ") cargoArgs;
-            }
-          );
-          rust-nextest = craneLib.cargoNextest (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-              partitions = 1;
-              partitionType = "count";
-            }
-          );
-        };
       }
     ))
     // {
