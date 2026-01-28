@@ -21,7 +21,6 @@
     }:
     let
       cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-      name = "clipcat";
     in
     (flake-utils.lib.eachDefaultSystem (
       system:
@@ -82,40 +81,15 @@
         packages = rec {
           default = clipcat;
           clipcat = pkgs.callPackage ./devshell/package.nix {
+            inherit (cargoToml.workspace.metadata.crane) name;
             inherit (cargoToml.workspace.package) version;
-            inherit name rustPlatform;
+            inherit rustPlatform;
           };
           container = pkgs.callPackage ./devshell/container.nix {
+            inherit (cargoToml.workspace.metadata.crane) name;
             inherit (cargoToml.workspace.package) version;
-            inherit name clipcat;
+            inherit clipcat;
           };
-        };
-
-        checks = {
-          format = pkgs.callPackage ./devshell/format.nix { };
-
-          rust-build = craneLib.cargoBuild (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-            }
-          );
-          rust-format = craneLib.cargoFmt { inherit src; };
-          rust-clippy = craneLib.cargoClippy (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-              cargoClippyExtraArgs = pkgs.lib.strings.concatMapStrings (x: x + " ") cargoArgs;
-            }
-          );
-          rust-nextest = craneLib.cargoNextest (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-              partitions = 1;
-              partitionType = "count";
-            }
-          );
         };
       }
     ))

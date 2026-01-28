@@ -164,7 +164,12 @@ impl Cli {
         let fut = async move {
             let client = {
                 let access_token = config.access_token();
-                Client::new(config.server_endpoint, access_token).await?
+                Client::builder()
+                    .grpc_endpoint(config.server_endpoint)
+                    .access_token(access_token)
+                    .max_decoding_message_size(config.grpc_max_message_size)
+                    .build()
+                    .await?
             };
             let clips = client.list(config.preview_length).await?;
 
