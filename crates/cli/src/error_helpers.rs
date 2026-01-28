@@ -1,16 +1,17 @@
 use std::fmt;
 
-/// Checks if the error is related to gRPC message size limits
+/// Checks if the error is related to gRPC message size limits.
+#[inline]
 #[must_use]
-pub fn is_grpc_message_size_error(error_str: &str) -> bool {
+fn is_grpc_message_size_error(error_str: &str) -> bool {
     error_str.contains("decoded message length too large")
 }
 
-/// Formats an error with additional help text if it's a message size error
-pub fn format_error_with_help<E: fmt::Display>(
-    error: &E,
-    program_name: &str,
-    config_file: &str,
+/// Formats an error with additional help text if it is a message size error.
+pub fn format_error_with_help<E: fmt::Display, P: fmt::Display, C: fmt::Display>(
+    error: E,
+    program_name: P,
+    config_file: C,
 ) -> String {
     let error_str = error.to_string();
 
