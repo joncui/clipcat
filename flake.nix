@@ -81,12 +81,12 @@
         packages = rec {
           default = clipcat;
           clipcat = pkgs.callPackage ./devshell/package.nix {
-            inherit (cargoToml.workspace.package) name;
+            inherit (cargoToml.workspace.metadata.crane) name;
             inherit (cargoToml.workspace.package) version;
             inherit rustPlatform;
           };
           container = pkgs.callPackage ./devshell/container.nix {
-            inherit (cargoToml.workspace.package) name;
+            inherit (cargoToml.workspace.metadata.crane) name;
             inherit (cargoToml.workspace.package) version;
             inherit clipcat;
           };
