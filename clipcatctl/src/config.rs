@@ -122,5 +122,6 @@ pub enum Error {
 }
 
 const fn default_grpc_max_message_size() -> usize {
-    8 * 1024 * 1024 // 8MB (doubled from 4MB default)
+    // 8MiB (doubled from 4MiB default)
+    8 * 1024 * 1024
 }
