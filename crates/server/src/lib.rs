@@ -58,6 +58,7 @@ pub async fn serve_with_shutdown(
         grpc_access_token,
         primary_threshold,
         max_history,
+        clear_history_on_start,
         history_file_path,
         synchronize_selection_with_clipboard,
         watcher: watcher_opts,
@@ -92,18 +93,27 @@ pub async fn serve_with_shutdown(
             .await
             .context(error::CreateHistoryManagerSnafu)?;
 
-        tracing::info!("Load history from `{path}`", path = history_manager.path().display());
-        let history_clips = history_manager
-            .load()
-            .await
-            .map_err(|err| {
-                tracing::error!(
-                    "Could not load history, data might be corrupted, please remove `{path}`, \
-                     error: {err}",
-                    path = history_manager.path().display()
-                );
-            })
-            .unwrap_or_default();
+        let history_clips = if clear_history_on_start {
+            tracing::info!("Clearing history at `{path}`", path = history_manager.path().display());
+            if let Err(err) = history_manager.clear().await {
+                tracing::error!("Failed to clear clipboard history, error: {err}");
+            }
+            Vec::new()
+        } else {
+            tracing::info!("Load history from `{path}`", path = history_manager.path().display());
+            history_manager
+                .load()
+                .await
+                .map_err(|err| {
+                    tracing::error!(
+                        "Could not load history, data might be corrupted, please remove `{path}`, \
+                         error: {err}",
+                        path = history_manager.path().display()
+                    );
+                })
+                .unwrap_or_default()
+        };
+
         let clip_count = history_clips.len();
         if clip_count > 0 {
             tracing::info!("{clip_count} clip(s) loaded");
