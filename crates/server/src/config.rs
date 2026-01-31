@@ -14,6 +14,8 @@ pub struct Config {
 
     pub max_history: usize,
 
+    pub clear_history_on_start: bool,
+
     pub synchronize_selection_with_clipboard: bool,
 
     pub history_file_path: PathBuf,
