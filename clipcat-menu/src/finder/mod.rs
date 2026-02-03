@@ -23,6 +23,27 @@ pub enum SelectionMode {
     Multiple,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum FinderResult {
+    Select(Vec<usize>),
+    Delete(Vec<usize>),
+    Cancel,
+}
+
+#[derive(Clone, Debug)]
+pub enum SingleSelectionResult {
+    Select(usize, ClipEntryMetadata),
+    Delete(usize, ClipEntryMetadata),
+    Cancel,
+}
+
+#[derive(Clone, Debug)]
+pub enum MultiSelectionResult {
+    Select(Vec<(usize, ClipEntryMetadata)>),
+    Delete(Vec<(usize, ClipEntryMetadata)>),
+    Cancel,
+}
+
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum FinderType {
     #[default]
@@ -138,33 +159,50 @@ impl FinderRunner {
     pub async fn single_select(
         &self,
         clips: &[ClipEntryMetadata],
-    ) -> Result<Option<(usize, ClipEntryMetadata)>, FinderError> {
-        let selected_indices = self.select(clips, SelectionMode::Single).await?;
-        if let Some(&selected_index) = selected_indices.first() {
-            let selected_data = &clips[selected_index];
-            Ok(Some((selected_index, selected_data.clone())))
-        } else {
-            Ok(None)
-        }
+    ) -> Result<SingleSelectionResult, FinderError> {
+        let result = self.select(clips, SelectionMode::Single).await?;
+        Ok(match result {
+            FinderResult::Select(indices) => match indices.first() {
+                Some(&index) => SingleSelectionResult::Select(index, clips[index].clone()),
+                None => SingleSelectionResult::Cancel,
+            },
+            FinderResult::Delete(indices) => match indices.first() {
+                Some(&index) => SingleSelectionResult::Delete(index, clips[index].clone()),
+                None => SingleSelectionResult::Cancel,
+            },
+            FinderResult::Cancel => SingleSelectionResult::Cancel,
+        })
     }
 
     pub async fn multiple_select(
         &self,
         clips: &[ClipEntryMetadata],
-    ) -> Result<Vec<(usize, ClipEntryMetadata)>, FinderError> {
-        let selected_indices = self.select(clips, SelectionMode::Multiple).await?;
-        Ok(selected_indices.into_iter().map(|index| (index, clips[index].clone())).collect())
+    ) -> Result<MultiSelectionResult, FinderError> {
+        let result = self.select(clips, SelectionMode::Multiple).await?;
+        let to_selections = |indices: Vec<usize>| {
+            indices.into_iter().map(|index| (index, clips[index].clone())).collect()
+        };
+        Ok(match result {
+            FinderResult::Select(indices) => MultiSelectionResult::Select(to_selections(indices)),
+            FinderResult::Delete(indices) => MultiSelectionResult::Delete(to_selections(indices)),
+            FinderResult::Cancel => MultiSelectionResult::Cancel,
+        })
     }
 
     pub async fn select(
         &self,
         clips: &[ClipEntryMetadata],
         selection_mode: SelectionMode,
-    ) -> Result<Vec<usize>, FinderError> {
+    ) -> Result<FinderResult, FinderError> {
         if self.external.is_some() {
             self.select_externally(clips, selection_mode).await
         } else {
-            BuiltinFinder::new().select(clips, selection_mode).await
+            let indices = BuiltinFinder::new().select(clips, selection_mode).await?;
+            if indices.is_empty() {
+                Ok(FinderResult::Cancel)
+            } else {
+                Ok(FinderResult::Select(indices))
+            }
         }
     }
 
@@ -172,7 +210,7 @@ impl FinderRunner {
         &self,
         clips: &[ClipEntryMetadata],
         selection_mode: SelectionMode,
-    ) -> Result<Vec<usize>, FinderError> {
+    ) -> Result<FinderResult, FinderError> {
         if let Some(external) = &self.external {
             let input_data = external.generate_input(clips);
             let mut child = external
@@ -184,13 +222,11 @@ impl FinderRunner {
             }
 
             let output = child.wait_with_output().await.context(error::ReadStdoutSnafu)?;
-            if output.stdout.is_empty() {
-                return Ok(Vec::new());
-            }
+            let exit_code = output.status.code();
 
-            Ok(external.parse_output(output.stdout.as_slice()))
+            Ok(external.parse_result(output.stdout.as_slice(), exit_code))
         } else {
-            Ok(Vec::new())
+            Ok(FinderResult::Cancel)
         }
     }
 

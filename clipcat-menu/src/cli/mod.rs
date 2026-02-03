@@ -12,7 +12,7 @@ use tokio::runtime::Runtime;
 use crate::{
     config::Config,
     error::{self, Error},
-    finder::{FinderRunner, FinderType},
+    finder::{FinderRunner, FinderType, MultiSelectionResult, SingleSelectionResult},
     shadow,
 };
 
@@ -187,34 +187,49 @@ impl Cli {
                 }
                 None => insert_clip(&clips, &finder, &client, &[ClipboardKind::Clipboard]).await?,
                 Some(Commands::Remove) => {
-                    let selections = finder.multiple_select(&clips).await?;
-                    let ids: Vec<_> = selections.into_iter().map(|(_, clip)| clip.id).collect();
-                    let removed_ids = client.batch_remove(&ids).await?;
-                    for id in removed_ids {
-                        tracing::info!("Removing clip (id: {id:016x})");
+                    let result = finder.multiple_select(&clips).await?;
+                    match result {
+                        MultiSelectionResult::Select(selections)
+                        | MultiSelectionResult::Delete(selections) => {
+                            let ids: Vec<_> = selections.iter().map(|(_, clip)| clip.id).collect();
+                            let removed_ids = client.batch_remove(&ids).await?;
+                            for id in removed_ids {
+                                tracing::info!("Removing clip (id: {id:016x})");
+                            }
+                        }
+                        MultiSelectionResult::Cancel => {
+                            tracing::info!("Nothing is selected");
+                        }
                     }
                 }
                 Some(Commands::Edit { editor }) => {
-                    let selection = finder.single_select(&clips).await?;
-                    if let Some((_index, metadata)) = selection {
-                        let clip = client.get(metadata.id).await?;
-                        if clip.is_utf8_string() {
-                            let editor = ExternalEditor::new(editor);
-                            let new_data = editor
-                                .execute(&clip.as_utf8_string())
-                                .await
-                                .context(error::CallEditorSnafu)?;
-                            let (ok, new_id) =
-                                client.update(clip.id(), new_data.as_bytes(), clip.mime()).await?;
-                            if ok {
-                                tracing::info!("Editing clip (id: {:016x})", new_id);
+                    let result = finder.single_select(&clips).await?;
+                    match result {
+                        SingleSelectionResult::Select(_, metadata) => {
+                            let clip = client.get(metadata.id).await?;
+                            if clip.is_utf8_string() {
+                                let editor = ExternalEditor::new(editor);
+                                let new_data = editor
+                                    .execute(&clip.as_utf8_string())
+                                    .await
+                                    .context(error::CallEditorSnafu)?;
+                                let (ok, new_id) = client
+                                    .update(clip.id(), new_data.as_bytes(), clip.mime())
+                                    .await?;
+                                if ok {
+                                    tracing::info!("Editing clip (id: {:016x})", new_id);
+                                }
+                                let _ok = client.mark(new_id, ClipboardKind::Clipboard).await?;
+                                drop(client);
                             }
-                            let _ok = client.mark(new_id, ClipboardKind::Clipboard).await?;
-                            drop(client);
                         }
-                    } else {
-                        tracing::info!("Nothing is selected");
-                        return Ok(());
+                        SingleSelectionResult::Delete(index, clip) => {
+                            tracing::info!("Deleting clip (index: {index}, id: {:016x})", clip.id);
+                            let _removed_ids = client.batch_remove(&[clip.id]).await?;
+                        }
+                        SingleSelectionResult::Cancel => {
+                            tracing::info!("Nothing is selected");
+                        }
                     }
                 }
                 _ => unreachable!(),
@@ -233,14 +248,21 @@ async fn insert_clip(
     client: &Client,
     clipboard_kinds: &[ClipboardKind],
 ) -> Result<(), Error> {
-    let selection = finder.single_select(clips).await?;
-    if let Some((index, clip)) = selection {
-        tracing::info!("Inserting clip (index: {index}, id: {:016x})", clip.id);
-        for &clipboard_kind in clipboard_kinds {
-            let _ok = client.mark(clip.id, clipboard_kind).await?;
+    let result = finder.single_select(clips).await?;
+    match result {
+        SingleSelectionResult::Select(index, clip) => {
+            tracing::info!("Inserting clip (index: {index}, id: {:016x})", clip.id);
+            for &clipboard_kind in clipboard_kinds {
+                let _ok = client.mark(clip.id, clipboard_kind).await?;
+            }
         }
-    } else {
-        tracing::info!("Nothing is selected");
+        SingleSelectionResult::Delete(index, clip) => {
+            tracing::info!("Deleting clip (index: {index}, id: {:016x})", clip.id);
+            let _removed_ids = client.batch_remove(&[clip.id]).await?;
+        }
+        SingleSelectionResult::Cancel => {
+            tracing::info!("Nothing is selected");
+        }
     }
 
     Ok(())
