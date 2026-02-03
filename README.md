@@ -411,6 +411,9 @@ menu_length = 30
 # Prompt for the menu.
 menu_prompt = "Clipcat"
 # Extra arguments to pass to `rofi`.
+# Rofi supports deleting entries using kb-custom-1 (default: Alt+1).
+# To rebind to Shift+Delete:
+# extra_arguments = ["-kb-custom-1", "shift+Delete", "-kb-delete-entry", ""]
 extra_arguments = ["-mesg", "Please select a clip"]
 
 # Options for "dmenu".
