@@ -64,13 +64,13 @@ fn build_thread(
     let thread = thread::Builder::new()
         .name("clipboard-listener".to_string())
         .spawn(move || {
-            let pasteboard = unsafe { NSPasteboard::generalPasteboard() };
+            let pasteboard = NSPasteboard::generalPasteboard();
             thread::sleep(POLLING_INTERVAL);
 
             while is_running.load(Ordering::Relaxed) {
                 tracing::trace!("Wait for readiness events");
 
-                let count: Option<isize> = Some(unsafe { pasteboard.changeCount() });
+                let count: Option<isize> = Some(pasteboard.changeCount());
 
                 if count == prev_count {
                     tracing::trace!("Pasteboard is not changed, sleep for a while");

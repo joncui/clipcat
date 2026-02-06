@@ -20,9 +20,7 @@ rustPlatform.buildRustPackage {
   };
 
   buildInputs = lib.optionals stdenv.isDarwin [
-    darwin.apple_sdk.frameworks.Cocoa
-    darwin.apple_sdk.frameworks.Security
-    darwin.apple_sdk.frameworks.SystemConfiguration
+    darwin.libiconv
   ];
 
   nativeBuildInputs = [
