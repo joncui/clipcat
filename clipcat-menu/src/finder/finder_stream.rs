@@ -1,5 +1,7 @@
 use clipcat_base::ClipEntryMetadata;
 
+use crate::finder::FinderResult;
+
 pub const ENTRY_SEPARATOR: &str = "\n";
 pub const INDEX_SEPARATOR: char = ':';
 
@@ -25,6 +27,11 @@ pub trait FinderStream: Send + Sync {
                     .ok()
             })
             .collect()
+    }
+
+    fn parse_result(&self, data: &[u8], _exit_code: Option<i32>) -> FinderResult {
+        let indices = self.parse_output(data);
+        if indices.is_empty() { FinderResult::Cancel } else { FinderResult::Select(indices) }
     }
 
     fn set_extra_arguments(&mut self, _arguments: &[String]) {}

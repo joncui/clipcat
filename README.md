@@ -177,6 +177,9 @@ daemonize = true
 # Maximum number of clips in history.
 max_history = 50
 
+# Clears the history on startup when set to true
+clear_history_on_start = false
+
 # File path for clip history.
 # If this value is omitted, `clipcatd` will persist history in `$XDG_CACHE_HOME/clipcat/clipcatd-history`.
 history_file_path = "/home/<username>/.cache/clipcat/clipcatd-history"
@@ -408,6 +411,9 @@ menu_length = 30
 # Prompt for the menu.
 menu_prompt = "Clipcat"
 # Extra arguments to pass to `rofi`.
+# Rofi supports deleting entries using kb-custom-1 (default: Alt+1).
+# To rebind to Shift+Delete:
+# extra_arguments = ["-kb-custom-1", "shift+Delete", "-kb-delete-entry", ""]
 extra_arguments = ["-mesg", "Please select a clip"]
 
 # Options for "dmenu".
