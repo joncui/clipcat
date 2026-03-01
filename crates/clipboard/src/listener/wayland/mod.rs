@@ -80,7 +80,7 @@ fn build_thread(
     clip_filter: Arc<ClipFilter>,
 ) -> thread::JoinHandle<Result<(), Error>> {
     // FIXME: re-implement this with event-driven mechanism,
-    // polling is not a good enough
+    // polling is not good enough.
     thread::Builder::new()
         .name(format!("{clipboard_type:?}-listener"))
         .spawn(move || {
@@ -95,7 +95,7 @@ fn build_thread(
                     Ok(mime_types) if clip_filter.filter_sensitive_mime_type(mime_types.iter()) => {
                         if !last_is_sensitive {
                             tracing::info!("Sensitive content detected, ignore it");
-                        };
+                        }
                         current_is_sensitive = true;
                     }
                     Ok(mime_types) => {
