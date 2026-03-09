@@ -44,8 +44,6 @@ pub struct Subscriber {
     kind: ClipboardKind,
 }
 
-// FIXME:
-#[allow(clippy::significant_drop_in_scrutinee)]
 impl ClipboardWait for Subscriber {
     fn wait(&self) -> Result<(ClipboardKind, mime::Mime), Error> {
         let (lock, condvar) = &*self.inner;

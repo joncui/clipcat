@@ -3,7 +3,8 @@ use clipcat_base::ClipEntryMetadata;
 use crate::{
     config,
     finder::{
-        FinderStream, SelectionMode, external::ExternalProgram, finder_stream::ENTRY_SEPARATOR,
+        FinderResult, FinderStream, SelectionMode, external::ExternalProgram,
+        finder_stream::ENTRY_SEPARATOR,
     },
 };
 
@@ -61,6 +62,15 @@ impl FinderStream for Rofi {
             .collect()
     }
 
+    fn parse_result(&self, data: &[u8], exit_code: Option<i32>) -> FinderResult {
+        let indices = self.parse_output(data);
+        match exit_code {
+            Some(10) if !indices.is_empty() => FinderResult::Delete(indices),
+            _ if indices.is_empty() => FinderResult::Cancel,
+            _ => FinderResult::Select(indices),
+        }
+    }
+
     fn set_line_length(&mut self, line_length: usize) { self.line_length = line_length }
 
     fn set_menu_length(&mut self, menu_length: usize) { self.menu_length = menu_length; }
@@ -74,7 +84,7 @@ impl FinderStream for Rofi {
 mod tests {
     use crate::{
         config,
-        finder::{Rofi, SelectionMode, external::ExternalProgram},
+        finder::{FinderResult, FinderStream, Rofi, SelectionMode, external::ExternalProgram},
     };
 
     #[test]
@@ -121,5 +131,22 @@ mod tests {
                 "Please select a clip".to_owned()
             ]
         );
+    }
+
+    #[test]
+    fn test_parse_result() {
+        let rofi = Rofi::from(config::Rofi::default());
+
+        assert_eq!(rofi.parse_result(b"0", Some(0)), FinderResult::Select(vec![0]));
+        assert_eq!(rofi.parse_result(b"5", None), FinderResult::Select(vec![5]));
+        assert_eq!(rofi.parse_result(b"1\n2\n3", Some(0)), FinderResult::Select(vec![1, 2, 3]));
+
+        assert_eq!(rofi.parse_result(b"", Some(0)), FinderResult::Cancel);
+        assert_eq!(rofi.parse_result(b"", Some(1)), FinderResult::Cancel);
+
+        assert_eq!(rofi.parse_result(b"3", Some(10)), FinderResult::Delete(vec![3]));
+        assert_eq!(rofi.parse_result(b"0", Some(10)), FinderResult::Delete(vec![0]));
+        assert_eq!(rofi.parse_result(b"", Some(10)), FinderResult::Cancel);
+        assert_eq!(rofi.parse_result(b"5\n2\n3", Some(10)), FinderResult::Delete(vec![5, 2, 3]));
     }
 }
